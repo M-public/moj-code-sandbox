@@ -1,8 +1,11 @@
 package com.meng.mojcodesandbox.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.meng.mojcodesandbox.JavaNativeCodeSandBox;
+import com.meng.mojcodesandbox.model.ExecuteCodeRequest;
+import com.meng.mojcodesandbox.model.ExecuteCodeResponse;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
 
 /**
  * @DESCRIPTION: description
@@ -12,8 +15,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController("/")
 public class MainController {
 
+    @Resource
+    private JavaNativeCodeSandBox javaNativeCodeSandBox;
+
     @GetMapping("/health")
     public String healthCheck(){
         return "ok";
     }
+
+
+    @PostMapping("/executeCode")
+    ExecuteCodeResponse executeCode(@RequestBody ExecuteCodeRequest executeCodeRequest){
+
+        if (executeCodeRequest == null){
+            throw new RuntimeException("参数为空");
+        }
+        return javaNativeCodeSandBox.executeCode(executeCodeRequest);
+    }
+
+
 }

@@ -8,8 +8,8 @@ import com.meng.mojcodesandbox.model.ExecuteCodeRequest;
 import com.meng.mojcodesandbox.model.ExecuteCodeResponse;
 import com.meng.mojcodesandbox.model.ExecuteMessage;
 import com.meng.mojcodesandbox.model.JudgeInfo;
-import com.meng.mojcodesandbox.security.MySecurityManager;
 import com.meng.mojcodesandbox.utils.ProcessUtils;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -23,6 +23,7 @@ import java.util.UUID;
  * @AUTHOR: MENGLINGQI
  * @TIME: 2024/11/13 18:42
  **/
+@Component
 public class JavaNativeCodeSandBox implements CodeSandBox {
 
     private static final String GLOBAL_CODE_DIR_NAME = "tmpCode";
