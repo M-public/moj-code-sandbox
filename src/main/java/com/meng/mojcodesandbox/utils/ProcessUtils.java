@@ -65,6 +65,7 @@ public class ProcessUtils {
                     errorOutputList.add(errorCompileOutputLine);
                 executeMessage.setErrorMessage(StringUtils.join(errorOutputList, "\n"));
             }
+            runProcess.destroy();
             stopWatch.stop();
             long runTaskTimeMillis = stopWatch.getLastTaskTimeMillis();
             executeMessage.setTime(runTaskTimeMillis);

@@ -114,9 +114,11 @@ public class JavaNativeCodeSandBox implements CodeSandBox {
                 Thread thread = new Thread(() -> {
                     try {
                         Thread.sleep(TIME_OUT);
-                        // TODO: 先判断一下执行程序线程是否正常结束，若不正常再杀掉
-                        System.out.println("超时了，中断程序");
-                        runProcess.destroy();
+                        if (runProcess.isAlive()){
+                            System.out.println("超时了，中断程序");
+                            runProcess.destroy();
+                        }
+
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
