@@ -1,9 +1,12 @@
 package com.meng.mojcodesandbox.utils;
 
 import com.meng.mojcodesandbox.model.ExecuteMessage;
+import com.sun.deploy.util.StringUtils;
 import org.springframework.util.StopWatch;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @DESCRIPTION: 进程工具类
@@ -27,40 +30,40 @@ public class ProcessUtils {
             // 等待程序执行结束，获取错误码
             int exitValue = runProcess.waitFor();
             executeMessage.setExitValue(exitValue);
+
             // 正常退出
             if (exitValue == 0){
                 System.out.println(opName + "成功");
 
+                List<String> outputList = new ArrayList<>();
                 // 分批获取进程的输出。
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(runProcess.getInputStream()));
-                StringBuilder compileOutputStringBuilder = new StringBuilder();
                 // 逐行读取
                 String compileOutputLine;
                 while ((compileOutputLine = bufferedReader.readLine()) != null)
-                    compileOutputStringBuilder.append(compileOutputLine).append("\n");
-                executeMessage.setMessage(compileOutputStringBuilder.toString());
+                    outputList.add(compileOutputLine);
+                executeMessage.setMessage(StringUtils.join(outputList, "\n"));
             } else {
                 // 异常退出
                 System.out.println(opName + "失败，错误码：" + exitValue);
 
+                List<String> outputList = new ArrayList<>();
                 // 分批获取进程的输出。
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(runProcess.getInputStream()));
-                StringBuilder compileOutputStringBuilder = new StringBuilder();
                 // 逐行读取返回信息
                 String compileOutputLine;
                 while ((compileOutputLine = bufferedReader.readLine()) != null)
-                    compileOutputStringBuilder.append(compileOutputLine).append("\n");
-                System.out.println(compileOutputStringBuilder.toString());
+                    outputList.add(compileOutputLine);
+                executeMessage.setMessage(StringUtils.join(outputList, "\n"));
 
-
+                List<String> errorOutputList = new ArrayList<>();
                 // 分批获取进程的错误输出。
                 BufferedReader errorBufferedReader = new BufferedReader(new InputStreamReader(runProcess.getErrorStream()));
-                StringBuilder errorCompileOutputStringBuilder = new StringBuilder();
                 // 逐行读取错误信息
                 String errorCompileOutputLine;
                 while ((errorCompileOutputLine = errorBufferedReader.readLine()) != null)
-                    errorCompileOutputStringBuilder.append(errorCompileOutputLine);
-                executeMessage.setErrorMessage(errorCompileOutputStringBuilder.toString());
+                    errorOutputList.add(errorCompileOutputLine);
+                executeMessage.setErrorMessage(StringUtils.join(errorOutputList, "\n"));
             }
             stopWatch.stop();
             long runTaskTimeMillis = stopWatch.getLastTaskTimeMillis();
